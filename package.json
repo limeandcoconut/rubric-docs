@@ -1,0 +1,33 @@
+{
+  "name": "rubric-docs",
+  "version": "1.0.0",
+  "description": "A jsdoc site for Rubricjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jsdoc": "./node_modules/.bin/jsdoc ../rubricjs/src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/limeandcoconut/rubric-docs"
+  },
+  "keywords": [
+    "Rubric",
+    "Rubricjs",
+    "component",
+    "entity",
+    "system",
+    "ces",
+    "game"
+  ],
+  "author": "Jacob Smith (messagethesmith@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/limeandcoconut/rubric-docs/issues"
+  },
+  "homepage": "docs.thejacobsmith.com",
+  "dependencies": {
+    "express": "^4.15.2",
+    "jsdoc": "^3.4.3"
+  }
+}

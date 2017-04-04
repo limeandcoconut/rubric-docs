@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: rubric.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: rubric.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* eslint-env es6 */
+/**
+ * A module for managing a game loop.
+ * @module Rubric
+ */
+const Powertrain = require('powertrain');
+const InputAdapter = require('./input-adapter.js');
+
+/**
+ * Key for private data.
+ * @type {Symbol}
+ * @private
+ */
+let privateKey = Symbol('Rubric class private data key');
+
+/**
+ * Class for managing engine, input and systems.
+ */
+ // * @class Rubric
+module.exports = class Rubric {
+
+    /**
+     * @constructor
+     * @param  {object}     config      An configuration object containing at least the namespaced config info for
+     *                                  the Powertrain class.
+     */
+    constructor(config) {
+
+        /**
+         * Internal object literal for storing properly private data.
+         * @private
+         */
+        this[privateKey] = {
+            engine: new Powertrain(config.engine),
+        };
+
+        this.inputAdapters = new Map();
+        this.data = {};
+
+        /**
+         * Exposes start method of Powertrain to users.
+         */
+        this.start = this[privateKey].engine.start.bind(this[privateKey].engine);
+    }
+
+    /**
+     * Adds an instance of InputAdapter to internal list.
+     * @throws  {TypeError}                         Throws if the argument is not an instance of InputAdapter.
+     * @param   {InputAdapter}      inputAdapter    Input adapter to be added to internal list.
+     */
+    addInputAdapter(inputAdapter) {
+        if (!(inputAdapter instanceof InputAdapter)) {
+            throw new TypeError('Must be instance of InputAdapter');
+        }
+
+        this.inputAdapters.set(inputAdapter.constructor.name, inputAdapter);
+    }
+
+    /**
+     * Sets an instance of InputAdapter as the primary source of input for easy retrieval.
+     * @throws {TypeError}  Throws if the argument is not an instance of InputAdapter.
+     * @param   {InputAdapter}      inputAdapter    Input adapter to be added to internal list.
+     */
+    addPrimaryInputAdapter(inputAdapter) {
+        if (!(inputAdapter instanceof InputAdapter)) {
+            throw new TypeError('Must be instance of InputAdapter');
+        }
+
+        this.primaryInput = inputAdapter;
+        this.inputAdapters.set(inputAdapter.constructor.name, inputAdapter);
+    }
+
+    /**
+     * Calls init method on each input adapter.
+     * @method init
+     */
+    init() {
+        this.inputAdapters.forEach(value => value.init());
+    }
+
+    /**
+     * Sets update method.
+     * @method setUpdate
+     * @param  {Function}       fn      The function to be set as Rubric's engine's update method.
+     * @throws {Error}                  Throws if engine is running.
+     * @throws {TypeError}              Throws if the argument is not a function.
+     */
+    setUpdate(fn) {
+        let engine = this[privateKey].engine;
+        if (engine.running) {
+            throw new Error('Not allowed to override update method while Rubric is running');
+        } else if (typeof fn !== 'function') {
+            throw new TypeError('Argument must be a function');
+        }
+
+        engine.update = fn;
+    }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-EntityFactory.html">EntityFactory</a></li><li><a href="module-EntityManager.html">EntityManager</a></li><li><a href="module-index.html">index</a></li><li><a href="module-InputAdapter.html">InputAdapter</a></li><li><a href="module-Rubric.html">Rubric</a></li><li><a href="module-SubSystem.html">SubSystem</a></li><li><a href="module-System.html">System</a></li><li><a href="module-SystemManager.html">SystemManager</a></li><li><a href="module-timer.html">timer</a></li><li><a href="module-TimerManager.html">TimerManager</a></li></ul><h3>Classes</h3><ul><li><a href="module-EntityFactory-EntityFactory.html">EntityFactory</a></li><li><a href="module-EntityManager-EntityManager.html">EntityManager</a></li><li><a href="module-InputAdapter.html">InputAdapter</a></li><li><a href="module-Rubric.html">Rubric</a></li><li><a href="module-SubSystem-SubSystem.html">SubSystem</a></li><li><a href="module-System.html">System</a></li><li><a href="module-SystemManager.html">SystemManager</a></li><li><a href="module-TimerManager-TimerManager.html">TimerManager</a></li><li><a href="module-timer-Timer.html">Timer</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Apr 04 2017 07:02:27 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
